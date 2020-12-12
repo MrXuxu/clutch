@@ -60,7 +60,7 @@ const resolveResource = async (
   const resolver = fields?.query !== undefined ? resolveQuery : resolveFields;
   return resolver(type, limit, fields)
     .then(({ results, failures }) => {
-      const resultObjects = results.map(result => _.get($pbclutch, type).fromObject(result));
+      const resultObjects = results.map(result => _.get($pbclutch, "clutch.k8s.v1.Facet").fromObject(result));
       const failureMessages = failures.map(failure => parseErrorMessage(failure.message).summary);
       if (_.some(resultObjects) !== undefined) {
         onResolve(resultObjects, failureMessages);
@@ -69,7 +69,7 @@ const resolveResource = async (
     .catch(err => {
       if (err?.response === undefined) {
         // Some runtime error we don't know how to handle.
-        onError(`Internal Client Error: '${err.message}'. Please contact the workflow developer.`);
+        onError(`Internal Client Error: '${err.message}' type: '${type}' . Please contact the workflow developer.`);
         return;
       }
 
